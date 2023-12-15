@@ -1,7 +1,7 @@
 From node:hydrogen-alpine3.19
-WORKDIR /UserDetails/
-COPY public/ /react-docker-example/public
-COPY src/ /react-docker-example/src
-COPY package.json /react-docker-example/
+WORKDIR /userdetails/
+COPY public/ /userdetails/public
+COPY src/ /userdetails/src
+COPY package.json /userdetails/
 RUN npm install
 CMD ["npm", "start"]
