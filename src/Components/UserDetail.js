@@ -1,5 +1,5 @@
 import react, { useEffect, useState } from "react";
-import { UserData } from "../StaticConstant.js";
+import { UserData, UserDetailsHeader } from "../StaticConstant.js";
 import axios from "axios";
 
 import {
@@ -18,14 +18,23 @@ const UserDetails = (props) => {
 
   useEffect(() => {
     axios.get("http://localhost:4000/fetchuser").then((res) => {
-      //debugger;
       let orderedData = res?.data?.toReversed();
       setUserList(orderedData);
-
-      console.log("response", res.data);
-      console.log("Soretedresponse", orderedData);
     });
   }, [updateUser]);
+
+  let generateHeader = () => {
+    let headerList = [];
+    for (const headerValue in userList[0]) {
+      headerList.push(
+        <TableCell key={headerValue} align="centre">
+          {headerValue}
+        </TableCell>
+      );
+    }
+    return headerList;
+  };
+
   return userList.length > 0 ? (
     <TableContainer
       component={Paper}
@@ -43,16 +52,28 @@ const UserDetails = (props) => {
       >
         <TableHead>
           <TableRow>
-            <TableCell align="centre">FirstName</TableCell>
-            <TableCell align="centre">LastName</TableCell>
-            <TableCell align="centre">Email</TableCell>
+            {UserDetailsHeader.map((headerValue) => {
+              return (
+                <TableCell
+                  key={headerValue}
+                  align="centre"
+                  sx={{ backgroundColor: "lightgray", fontWeight: "600" }}
+                >
+                  {headerValue}
+                </TableCell>
+              );
+            })}
           </TableRow>
         </TableHead>
         <TableBody>
           {userList.toReversed().map((User) => (
             <TableRow
               key={User.firstName}
-              sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+              sx={{
+                "&:last-child td, &:last-child th": {
+                  border: 0,
+                },
+              }}
             >
               <TableCell align="left">{User.firstName}</TableCell>
               <TableCell align="left">{User.lastName}</TableCell>

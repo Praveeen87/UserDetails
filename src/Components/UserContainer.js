@@ -7,23 +7,16 @@ import axios from "axios";
 const UserContainer = () => {
   const [updatedList, setUpdatedList] = useState([]);
 
-  // useEffect(() => {
-  //   axios.get("http://localhost:4000/fetchuser").then((res) => {
-  //     setUpdatedList(res?.data);
-  //     console.log("response", res);
-  //   });
-  // }, [updatedList]);
-
   const updateList = (data) => {
     setUpdatedList(data);
   };
 
   return (
     <Grid container>
-      <Grid item xs={6}>
+      <Grid item xs={4}>
         <UserEntry userAdded={updateList} />
       </Grid>
-      <Grid item xs={6}>
+      <Grid item xs={8}>
         <UserDetails updateUser={updatedList} />
       </Grid>
     </Grid>

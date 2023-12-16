@@ -21,16 +21,26 @@ const GenericInputField = forwardRef((props, _ref) => {
     let Alphacharregex = /^[a-zA-Z]+$/;
     let emailRegex = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/;
 
-    let validInput = validateInput(
-      type == "onlyAlpha" ? Alphacharregex : emailRegex,
-      targetValue
-    );
+    let validInput =
+      targetValue.length > 0
+        ? validateInput(
+            type == "onlyAlpha" ? Alphacharregex : emailRegex,
+            targetValue
+          )
+        : true;
     if (validInput) {
       setinputValue(targetValue);
       seterrorStatus(false);
+      setHelperMessage("");
     } else {
-      setinputValue(targetValue);
-      seterrorStatus(true);
+      //let removenumbers = targetValue.replace(/[0-9]/g, "");
+
+      if (type != "onlyAlpha") {
+        setinputValue(targetValue);
+        seterrorStatus(true);
+        setHelperMessage("Not a valid email");
+      }
+      // setHelperMessage("Only Alphabets allowed");
     }
   };
 
@@ -40,6 +50,10 @@ const GenericInputField = forwardRef((props, _ref) => {
     },
     removeValue: () => {
       setinputValue("");
+    },
+    updateErrorstatus: (val) => {
+      seterrorStatus(true);
+      if (typeof val === "object") setHelperMessage(val?.message);
     },
   }));
 

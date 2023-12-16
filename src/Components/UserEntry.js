@@ -4,6 +4,8 @@ import GenericInputField from "./TextField";
 import axios from "axios";
 
 const UserEntry = (props) => {
+  const [enableAdd, setenableAdd] = useState(true);
+
   const firstNameRef = useRef();
   const lastNameRef = useRef();
   const emailRef = useRef();
@@ -13,20 +15,59 @@ const UserEntry = (props) => {
     let LastName = lastNameRef.current.getinputValue();
     let Email = emailRef.current.getinputValue();
 
-    let enteredUSerDetails = {
-      firstName: FirstName,
-      lastName: LastName,
-      email: Email,
-    };
+    if (FirstName.length > 0) {
+      if (LastName.length > 0) {
+        if (/^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(Email)) {
+          let enteredUSerDetails = {
+            firstName: FirstName,
+            lastName: LastName,
+            email: Email,
+          };
 
-    axios
-      .post("http://localhost:4000/createuser", enteredUSerDetails)
-      .then((res) => {
-        props.userAdded(res.data);
-        firstNameRef.current.removeValue();
-        lastNameRef.current.removeValue();
-        emailRef.current.removeValue();
+          axios
+            .post("http://localhost:4000/createuser", enteredUSerDetails)
+            .then((res) => {
+              props.userAdded(res.data);
+              firstNameRef.current.removeValue();
+              lastNameRef.current.removeValue();
+              emailRef.current.removeValue();
+            });
+        } else {
+          emailRef.current.updateErrorstatus({
+            field: "email",
+            message:
+              Email.length <= 0 ? "Email is required" : "Not a valid email",
+          });
+        }
+      } else {
+        lastNameRef.current.updateErrorstatus({
+          field: "LastName",
+          message: "LastName  is Required",
+        });
+        if (Email.length <= 0)
+          emailRef.current.updateErrorstatus({
+            field: "Email",
+            message:
+              Email.length <= 0 ? "Email is required" : "Not a valid email",
+          });
+      }
+    } else {
+      firstNameRef.current.updateErrorstatus({
+        field: "FirstName",
+        message: "FirstName  is required",
       });
+      if (LastName.length <= 0)
+        lastNameRef.current.updateErrorstatus({
+          field: "LastName",
+          message: "LastName  is required",
+        });
+      if (Email.length <= 0)
+        emailRef.current.updateErrorstatus({
+          field: "Email",
+          message:
+            Email.length <= 0 ? "Email is required" : "Not a valid email",
+        });
+    }
   };
 
   return (
@@ -44,9 +85,9 @@ const UserEntry = (props) => {
         ref={firstNameRef}
         label="FirstName"
         helperText="FirstName"
-        errorStatus={false}
+        erorStatus={false}
         type="onlyAlpha"
-        maxLength={10}
+        maxLength={100}
         validate={true}
       />
       <GenericInputField
@@ -55,7 +96,7 @@ const UserEntry = (props) => {
         helperText="LastName"
         errorStatus={false}
         type="onlyAlpha"
-        maxLength={10}
+        maxLength={100}
         validate={true}
       />
       <GenericInputField
@@ -66,7 +107,13 @@ const UserEntry = (props) => {
         type="email"
         validate={true}
       />
-      <Button variant="contained" fullWidth onClick={() => createUser(props)}>
+
+      <Button
+        variant="contained"
+        fullWidth
+        disabled={enableAdd ? false : true}
+        onClick={() => createUser(props)}
+      >
         Add Me
       </Button>
     </Container>
