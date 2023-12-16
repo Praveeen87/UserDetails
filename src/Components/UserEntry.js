@@ -1,8 +1,34 @@
-import * as React from "react";
+import React, { useRef, useState } from "react";
 import { Button, Container } from "@mui/material";
 import GenericInputField from "./TextField";
+import axios from "axios";
 
-const UserEntry = () => {
+const UserEntry = (props) => {
+  const firstNameRef = useRef();
+  const lastNameRef = useRef();
+  const emailRef = useRef();
+
+  const createUser = (props) => {
+    let FirstName = firstNameRef.current.getinputValue();
+    let LastName = lastNameRef.current.getinputValue();
+    let Email = emailRef.current.getinputValue();
+
+    let enteredUSerDetails = {
+      firstName: FirstName,
+      lastName: LastName,
+      email: Email,
+    };
+
+    axios
+      .post("http://localhost:4000/createuser", enteredUSerDetails)
+      .then((res) => {
+        props.userAdded(res.data);
+        firstNameRef.current.removeValue();
+        lastNameRef.current.removeValue();
+        emailRef.current.removeValue();
+      });
+  };
+
   return (
     <Container
       sx={{
@@ -15,6 +41,7 @@ const UserEntry = () => {
       //margin={"0 auto"}
     >
       <GenericInputField
+        ref={firstNameRef}
         label="FirstName"
         helperText="FirstName"
         errorStatus={false}
@@ -23,6 +50,7 @@ const UserEntry = () => {
         validate={true}
       />
       <GenericInputField
+        ref={lastNameRef}
         label="LastName"
         helperText="LastName"
         errorStatus={false}
@@ -31,13 +59,14 @@ const UserEntry = () => {
         validate={true}
       />
       <GenericInputField
+        ref={emailRef}
         label="Email"
         helperText="Email"
         errorStatus={false}
         type="email"
         validate={true}
       />
-      <Button variant="contained" fullWidth>
+      <Button variant="contained" fullWidth onClick={() => createUser(props)}>
         Add Me
       </Button>
     </Container>

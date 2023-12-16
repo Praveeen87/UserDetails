@@ -1,8 +1,8 @@
 import { TextField } from "@mui/material";
 import { Box } from "@mui/system";
-import { useState } from "react";
+import { useState, forwardRef, useImperativeHandle } from "react";
 
-export default function GenericInputField(props) {
+const GenericInputField = forwardRef((props, _ref) => {
   const { label, helperText, maxLength, type, validate = false } = props;
 
   const [inputValue, setinputValue] = useState("");
@@ -34,6 +34,15 @@ export default function GenericInputField(props) {
     }
   };
 
+  useImperativeHandle(_ref, () => ({
+    getinputValue: () => {
+      return inputValue;
+    },
+    removeValue: () => {
+      setinputValue("");
+    },
+  }));
+
   return (
     <Box sx={{ p: 1 }}>
       <TextField
@@ -49,4 +58,6 @@ export default function GenericInputField(props) {
       />
     </Box>
   );
-}
+});
+
+export default GenericInputField;
