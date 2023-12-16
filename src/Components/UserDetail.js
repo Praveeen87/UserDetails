@@ -41,8 +41,8 @@ const UserDetails = (props) => {
       sx={{
         mt: 20,
         minWidth: 300,
-        minHeight: "50vh",
-        maxHeight: "50vh",
+        minHeight: "60vh",
+        maxHeight: "60vh",
       }}
     >
       <Table

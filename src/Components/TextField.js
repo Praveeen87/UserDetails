@@ -55,6 +55,10 @@ const GenericInputField = forwardRef((props, _ref) => {
       seterrorStatus(true);
       if (typeof val === "object") setHelperMessage(val?.message);
     },
+    resetErrorStatusNMessage: () => {
+      seterrorStatus(false);
+      setHelperMessage("");
+    },
   }));
 
   return (

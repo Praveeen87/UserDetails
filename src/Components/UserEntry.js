@@ -4,12 +4,19 @@ import GenericInputField from "./TextField";
 import axios from "axios";
 
 const UserEntry = (props) => {
-  const [enableAdd, setenableAdd] = useState(true);
-
   const firstNameRef = useRef();
   const lastNameRef = useRef();
   const emailRef = useRef();
 
+  const ResetValues = () => {
+    firstNameRef.current.removeValue();
+    lastNameRef.current.removeValue();
+    emailRef.current.removeValue();
+    firstNameRef.current.resetErrorStatusNMessage();
+    lastNameRef.current.resetErrorStatusNMessage();
+    emailRef.current.resetErrorStatusNMessage();
+  };
+  // Method to add user in to Database
   const createUser = (props) => {
     let FirstName = firstNameRef.current.getinputValue();
     let LastName = lastNameRef.current.getinputValue();
@@ -28,9 +35,7 @@ const UserEntry = (props) => {
             .post("http://localhost:4000/createuser", enteredUSerDetails)
             .then((res) => {
               props.userAdded(res.data);
-              firstNameRef.current.removeValue();
-              lastNameRef.current.removeValue();
-              emailRef.current.removeValue();
+              ResetValues();
             });
         } else {
           emailRef.current.updateErrorstatus({
@@ -71,52 +76,57 @@ const UserEntry = (props) => {
   };
 
   return (
-    <Container
-      sx={{
-        height: "50vh",
-        width: "80%",
-        boxShadow: 4,
-        mt: 20,
-        p: 3,
-      }}
-      //margin={"0 auto"}
-    >
-      <GenericInputField
-        ref={firstNameRef}
-        label="FirstName"
-        helperText="FirstName"
-        erorStatus={false}
-        type="onlyAlpha"
-        maxLength={100}
-        validate={true}
-      />
-      <GenericInputField
-        ref={lastNameRef}
-        label="LastName"
-        helperText="LastName"
-        errorStatus={false}
-        type="onlyAlpha"
-        maxLength={100}
-        validate={true}
-      />
-      <GenericInputField
-        ref={emailRef}
-        label="Email"
-        helperText="Email"
-        errorStatus={false}
-        type="email"
-        validate={true}
-      />
-
-      <Button
-        variant="contained"
-        fullWidth
-        disabled={enableAdd ? false : true}
-        onClick={() => createUser(props)}
+    <>
+      <Container
+        sx={{
+          height: "60vh",
+          width: "80%",
+          boxShadow: 4,
+          mt: 20,
+          p: 3,
+        }}
       >
-        Add Me
-      </Button>
-    </Container>
+        <h2>Add User</h2>
+
+        <GenericInputField
+          ref={firstNameRef}
+          label="FirstName"
+          helperText="FirstName"
+          erorStatus={false}
+          type="onlyAlpha"
+          maxLength={100}
+          validate={true}
+        />
+        <GenericInputField
+          ref={lastNameRef}
+          label="LastName"
+          helperText="LastName"
+          errorStatus={false}
+          type="onlyAlpha"
+          maxLength={100}
+          validate={true}
+        />
+        <GenericInputField
+          ref={emailRef}
+          label="Email"
+          helperText="Email"
+          errorStatus={false}
+          type="email"
+          validate={true}
+        />
+
+        <Button
+          variant="contained"
+          onClick={() => createUser(props)}
+          sx={{ m: 2, bottom: 0, right: 0, position: "absolute" }}
+        >
+          Add Me
+        </Button>
+        <Button variant="contained" onClick={ResetValues}>
+          Reset
+        </Button>
+      </Container>
+    </>
   );
 };
 
