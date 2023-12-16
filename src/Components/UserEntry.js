@@ -118,7 +118,7 @@ const UserEntry = (props) => {
         <Button
           variant="contained"
           onClick={() => createUser(props)}
-          sx={{ m: 2, bottom: 0, right: 0, position: "absolute" }}
+          sx={{ m: 2 }}
         >
           Add Me
         </Button>
