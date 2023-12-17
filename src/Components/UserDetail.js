@@ -17,10 +17,18 @@ const UserDetails = (props) => {
   const [userList, setUserList] = useState([]);
 
   useEffect(() => {
-    axios.get("http://localhost:4000/fetchuser").then((res) => {
-      let orderedData = res?.data?.toReversed();
-      setUserList(orderedData);
-    });
+    axios
+      .get("http://localhost:4000/fetchuser")
+      .then((res) => {
+        let orderedData = res?.data?.toReversed();
+        setUserList(orderedData);
+      })
+      .catch((error) => {
+        debugger;
+        if (error.code == "ERR_NETWORK") {
+          alert("request to run server in /userdetailsserver");
+        }
+      });
   }, [updateUser]);
 
   let generateHeader = () => {
@@ -86,9 +94,9 @@ const UserDetails = (props) => {
   ) : (
     <TableContainer
       component={Paper}
-      sx={{ mt: 20, p: 3, minWidth: 300, minHeight: "45vh" }}
+      sx={{ mt: 20, p: 3, minWidth: 300, minHeight: "55vh" }}
     >
-      No User Found
+      <h2>No User Found</h2>
     </TableContainer>
   );
 };
